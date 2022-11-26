@@ -1,0 +1,153 @@
+---
+title: "NZ covid current status"
+author: "David Hood (contact @thoughtfulnz@mastodon.nz)"
+format: html
+editor: visual
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = '',
+  fig.width = 8,
+  fig.height = 4.5,
+  dpi=300,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE
+)
+```
+
+```{r, librariesUsed}
+# this is a quarto document use R code chunks to load and run 
+# script steps, like this one to load all needed libraries
+source("../additionalScripts/libsUsed.r")
+```
+
+```{r, dataUsed, include=FALSE}
+# if it doesn't exist, create a desktop folder to store copies
+# of the latest graphs in
+
+if(!dir.exists("~/Desktop/NZcovidGraphs")){
+  dir.create("~/Desktop/NZcovidGraphs")
+}
+# download the latest data
+# you would need you own StatsNZ API key for this not to error
+source("../additionalScripts/downloads.R")
+```
+
+Last updated: `r format(Sys.time(), "%A %e %B %Y %I:%M%p")`
+
+This is a non-Twitter home for the core regular set of graphs I post updates for on Twitter, to make it easier for non-Twitter users to access. <a rel="me" href="https://mastodon.nz/@thoughtfulnz"></a>
+
+As well as myself, there are a couple of other sources of daily updates:
+
+Radio New Zealand: <https://www.rnz.co.nz/news/in-depth/450874/covid-19-data-visualisations-nz-in-numbers>
+
+newsroom: <https://www.newsroom.co.nz/daily-covid-19-case-charts>
+
+## Total new cases
+
+New Cases trend for the entire country for the past 28 days. As underreporting changes over time, this graph deliberately only shows 28 days to keep the underreporting rate reasonably similar through the period. Total new cases is updated everyday case data is published by the Ministry of Health.
+
+```{r, totalCasesTrend}
+source("../additionalScripts/TotalCases_trend.R")
+graf
+```
+
+## Infective Prevalence
+
+Given recent cases, and age cohort and regional undereporting, for meeting 100 people in an age band in an area, what is the average percentage that will be currently infectious (based on unreported cases so not in isolation). Infective Prevalence is updated everyday case data is published by the Ministry of Health.
+
+This now includes a reference to the formula 100\*(1-(1-x/100)\^y) which for events is the percentage chance and event has at least 1 covid positive person at it. You can paste that into google to do the calculate replacing x with the number from the table below and y with the number of people attending. For example if the number for 10-19 in a region was .5, then a school camp of 120 15 year olds with no pre-testing before camp to reduce infectious people would be 45% for at least 1 infectious person at the start of camp.
+
+```{r, prevalenceGrid}
+source("../additionalScripts/Prevalence_age_region.R")
+graf
+```
+
+## Regional trends
+
+For DHB based regions, this is the trends in rolling seven day mean new cases for each region for the past six weeks. Earlier in the pandemic there were large differences, but things have moved into parallel. One thing to watch for in this graph is if a region, or geographically adjacent regions, take off it may indicate the start of a new wave.
+
+```{r, Regionalcasetrend}
+source("../additionalScripts/Region_percent_cases.R")
+graf
+```
+
+## Total Daily Hospitalisations
+
+The seven day trend of people in hospital with covid for the past 28 days. Hospitalisation data is now not collected in weekends.
+
+```{r totalHospitalisationTrend}
+source("../additionalScripts/TotalHospitalisations_trend.R")
+graf
+```
+
+## Regional hospitalisation trends
+
+The seven day trend of people in hospital with covid by region since 11 May 2022 (reflecting a change in hospitalisation coding in northern regions seven days before). Hospitalisation data is now not collected in weekends.
+
+```{r regionalHospitalisation}
+source("../additionalScripts/regional_hospitalisation.R")
+graf
+```
+
+## All headline numbers
+
+By dividing the number of cases by 400, and the number of hospitalisations (people in hospital with covid) by 45, I have put all the main figures on one graph.
+
+```{r everythingAllAtOnce}
+source("../additionalScripts/Hospital_Death.R")
+graf
+```
+
+## Reinfections
+
+As, I think, most people are overestimating the degree of protection that a recent infection with covid will give you from another infection, this is the rate of reinfection (by age and time since first infection) as a percentage of the rate of first infections on the same date.
+
+The lower the percentage, the stronger the protection (either biological or as a result of the demographic life exposures that place people in the path of more infection opportunities). A 10% percentage is being reinfected 10 times less than the rate of people catching first infections, a 50% level is being reinfected only 2 times less.
+
+```{r AgeReinfectrates}
+source("../additionalScripts/Age_Reinfections.R")
+graf
+```
+
+## Regional Reinfections
+
+Since defeating an infection does give some immunity for a while, and infections spread via in-person contacts, and in-person contacts are largely local, it may be possible to get early warning that an immune evasive variant is spreading in a region if there is a rapid rise in 28-90 day re-infections (the people infected with the most recent variants) in a few areas relative to everywhere else. So recent surges are a warning sign.
+
+```{r regionReinfectrates}
+source("../additionalScripts/Regional_Reinfections.R")
+graf
+```
+
+## Wastewater matches
+
+```{r, wastewaterMatchSetup}
+source("../additionalScripts/Wastewater_matches.R")
+```
+
+For recent wastewater readings, what early time period do the wastewater covid concentrations fall into (week preceding and week following the current concentration). This is currently for the week ending `r ww_week_end`. This table checks the ESR GitHub wastewater repo for new data on Fridays, and updates if data is available.
+
+```{r, wastewaterMatch}
+kable(ranges)
+```
+
+## Whole pandemic regional totals
+
+I think the regional total cases is most useful for thinking about over case reporting on a regional basis (though this is all pandemic, rather than recent). While this updates whenever the MoH cases information is updated, as a percent of DHB population it clearly doesn't change much.
+
+```{r, allPandemicTotalCases}
+source("../additionalScripts/All_pandemic_total_cases.R")
+graf
+```
+
+## Year to Date all cause mortality
+
+I think this is an important graph, as people try to spread misinformation around "huge numbers of mystery deaths", which there just are not. Vaccines have done a very good job of lowering deaths per case, and there have been a lot of cases this year. Graph updated on Thursdays.
+
+```{r}
+source("../additionalScripts/NZweeklyDeaths.R")
+graf
+```

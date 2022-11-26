@@ -1,0 +1,5 @@
+---
+title: "About"
+---
+
+David Hood's (\@thoughtfulnz on Twitter, \@thoughtfulnz\@mastodon.nz) reference site for the covid graphs I share on Twitter
