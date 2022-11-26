@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 ```{r, librariesUsed}
 # this is a quarto document use R code chunks to load and run 
 # script steps, like this one to load all needed libraries
-source("../additionalScripts/libsUsed.r")
+source("../additionalScripts/libsUsed.R")
 ```
 
 ```{r, dataUsed, include=FALSE}
